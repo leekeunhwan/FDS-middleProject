@@ -20,4 +20,4 @@ async function indexPage() {
   
 }
 
-
+indexPage();
