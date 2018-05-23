@@ -4,16 +4,24 @@ const postAPI = axios.create({});
 const rootEl = document.querySelector(".root");
 
 
-if (localStorage.getItem('token')) {
-  postAPI.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+function login(token) {
+  localStorage.setItem('token', token);
+  postAPI.defaults.headers['Authorization'] = `Bearer ${token}`
   rootEl.classList.add('root--authed');
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  delete postAPI.defaults.headers['Authorization'];
+  rootEl.classList.remove('root--authed')
 }
 
 const templates = {
   postList: document.querySelector("#post-list").content,
   postItem: document.querySelector("#post-item").content,
   postContent: document.querySelector("#post-content").content,
-  login: document.querySelector('#login').content
+  login: document.querySelector('#login').content,
+  postForm: document.querySelector('#post-form').content
 };
 
 function render(fragment) {
@@ -28,11 +36,13 @@ async function indexPage() {
     loginPage();
   })
   listFragment.querySelector('.post-list__logout-btn').addEventListener('click', e => {
-    localStorage.removeItem('token');
-    delete postAPI.defaults.headers['Authorization'];
-    rootEl.classList.remove('root--authed')
+    logout();
     indexPage();
   })
+  listFragment.querySelector('.post-list__new-post-btn').addEventListener('click', e => {
+    postFormPage();
+  })
+
   res.data.forEach(post => {
     const fragment = document.importNode(templates.postItem, true);
     const pEl = fragment.querySelector('.post-item__title');
@@ -71,11 +81,35 @@ async function loginPage() {
     // 이 await는 비동기 함수안에 포함되어 있지만 지금 실행되는 함수가 비동기일 때만 사용할 수 있기에
     // addEventListner에 event 인자앞에 async를 붙여줘야한다.
     const res = await postAPI.post('http://localhost:3000/users/login', payload);
-    localStorage.setItem('token', res.data.token);
-    postAPI.defaults.headers['Authorization'] = `Bearer ${res.data.token}`
-    rootEl.classList.add('root--authed');
+    login(res.data.token);
     indexPage();
   })
   render(fragment);
 }
+
+async function postFormPage() {
+  const fragment = document.importNode(templates.postForm, true);
+  fragment.querySelector('.post-form__back-btn').addEventListener('click', e => {
+    e.preventDefault();
+    indexPage();
+  })
+
+  fragment.querySelector('.post-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const payload = {
+      title: e.target.elements.title.value,
+      body: e.target.elements.body.value
+    };
+    const res = await postAPI.post('http://localhost:3000/posts/', payload);
+    console.log(res);
+    indexPage();
+  })
+
+  render(fragment);
+}
+
+if (localStorage.getItem('token')) {
+  login(localStorage.getItem('token'));
+}
+
 indexPage();
