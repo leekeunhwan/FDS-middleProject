@@ -2,28 +2,47 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>중간 프로젝트 템플릿</title>
-    <link rel="stylesheet" href="./index.scss">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>중간 프로젝트 템플릿</title>
+  <link rel="stylesheet" href="./index.scss">
 </head>
 
 <body>
-    <div class="root"></div>
+  <div class="root"></div>
 
-    <template id="post-list">
-      <h1>게시글 목록</h1>
-      <div class="post-list"></div>
-    </template>
-
-
-    <template id="post-item">
-      <p class="post-item__title"></p>
-    </template>
+  <template id="post-list">
+    <h1>게시글 목록</h1>
+    <button class="post-list__login-btn">로그인</button>
+    <div class="post-list"></div>
+  </template>
 
 
-    <script src="./index.js"></script>
+  <template id="post-item">
+    <p class="post-item__title"></p>
+  </template>
+
+  <template id="post-content">
+    <div class="post-content">
+      <button class="post-content__back-btn">뒤로 가기</button>
+      <h2 class="post-content__title"></h2>
+      <p class="post-content__body"></p>
+    </div>
+
+  </template>
+  <template id="login">
+    <div class="login">
+      <h1 class="login__title">로그인</h1>
+      <form class="login__form">
+        <input name="username" type="text" class="login__username">
+        <input name="password" type="password" class="login__password">
+        <button type="submit">전송</button>
+      </form>
+    </div>
+  </template>
+
+  <script src="./index.js"></script>
 </body>
 
 </html>
