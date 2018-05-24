@@ -22,12 +22,15 @@
 
 
   <template id="post-item">
+    <p class="post-item__author"></p>
     <p class="post-item__title"></p>
   </template>
 
   <template id="post-content">
     <div class="post-content">
-      <button class="post-content__back-btn">뒤로 가기</button>
+      <button class="post-content__back-btn">뒤로가기</button>
+      <button class="post-content__edit-btn">수정하기</button>
+      <button class="post-content__delete-btn">삭제하기</button>
       <h2 class="post-content__title"></h2>
       <p class="post-content__body"></p>
     </div>
@@ -52,6 +55,19 @@
       <button class="post-form__submit-btn">전송</button>
       <button class="post-form__back-btn">뒤로가기</button>
     </form>
+  </template>
+
+  <template id="comments">
+    <!--comments__list에 동적 생성을 하기 위해 생성-->
+    <div class="comments__list"></div>
+    <form class="comments__form">
+      <input name="body" type="text" class="comments__body-input">
+      <button class="comments__submit-btn">전송</button>
+    </form>
+  </template>
+
+  <template id="comments-item">
+    <p class="comment-item__body"></p>
   </template>
 
   <script src="./index.js"></script>
