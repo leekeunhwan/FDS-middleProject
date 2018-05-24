@@ -94,7 +94,7 @@ async function postContentPage(postId) {
         bodyEl.remove();
         removeButtonEl.remove();
         const res = await postAPI.delete(`/comments/${comment.id}`)
-        // postContentPage(postId);
+        postContentPage(postId);
       })
     })
     const formEl = commentsFragment.querySelector('.comments__form');
