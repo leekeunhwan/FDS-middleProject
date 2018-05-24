@@ -77,6 +77,8 @@ async function postContentPage(postId) {
     const res = await postAPI.delete(`posts/${postId}`);
     indexPage();
   })
+  fragment.querySelector('.post-content__edit-btn')
+
   if (localStorage.getItem('token')) {
     const commentsFragment = document.importNode(templates.comments, true);
     rootEl.classList.add('root--loading')
@@ -84,8 +86,16 @@ async function postContentPage(postId) {
     rootEl.classList.remove('root--loading')
     commentsRes.data.forEach(comment => {
       const itemFragment = document.importNode(templates.commentItem, true);
-      itemFragment.querySelector('.comment-item__body').textContent = comment.body;
+      const bodyEl = itemFragment.querySelector('.comment-item__body')
+      const removeButtonEl = itemFragment.querySelector('.comment-item__remove-btn')
+      bodyEl.textContent = comment.body;
       commentsFragment.querySelector('.comments__list').appendChild(itemFragment);
+      removeButtonEl.addEventListener('click', async e => {
+        bodyEl.remove();
+        removeButtonEl.remove();
+        const res = await postAPI.delete(`/comments/${comment.id}`)
+        // postContentPage(postId);
+      })
     })
     const formEl = commentsFragment.querySelector('.comments__form');
     formEl.addEventListener('submit', async e => {
@@ -152,3 +162,17 @@ if (localStorage.getItem('token')) {
 }
 
 indexPage();
+
+
+// 낙관적 업데이트 - 사용자 입력 -> 화면 갱신 -> 통신 시작 (통신이 잘될거라는 가정이 필요)
+// 장점 : 응답 속도가 빠른 것처럼 느껴진다. (사용자 경험이 좋을 수 있다.)
+// 단점 : 통신을 실패했을 때의 처리가 복잡해진다.
+
+// 비관적 업데이트 - 통신 시작 -> 통신 끝 -> 화면 갱신
+// 장점 : 통신 관련 구현이 단순해진다.
+// 단점 : 사용자가 화면이 갱신될 때까지 기다려야 한다. (사용자 경험이 좋지 못할 수 있다.)
+
+// 낙관적 업데이트가 좋다 비관적 업데이트가 좋다라고 말할 수 없다.
+// 작은 회사에서 개발자가 한두명일 경우 비관적 업데이트가 좋을 것이고,
+// 큰 회사에서 개발자가 많을 경우 낙관적 업데이트가 좋을 수 있듯이
+// 환경과 조건에 따라 달라진다.
